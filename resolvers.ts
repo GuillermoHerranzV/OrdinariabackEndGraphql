@@ -5,5 +5,4 @@ export const resolvers = {
         Test: () => {return "Hola"}
 
     }
-
 }

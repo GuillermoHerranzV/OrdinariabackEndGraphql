@@ -78,7 +78,7 @@ export const resolvers = {
 
     Restaurant: {
 
-        id: async (parent: RestaurantModel, _:unknown,ctx: Collection <RestaurantModel>){
+        id: async (parent: RestaurantModel, _:unknown, ctx: Collection <RestaurantModel>) => {
             return parent._id!.toString();
         },
 

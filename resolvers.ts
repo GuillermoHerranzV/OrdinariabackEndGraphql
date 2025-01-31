@@ -19,7 +19,7 @@ export const resolvers = {
         getRestaurant: async (_:unknown, {id}: {id:string}, ctx: Collection <RestaurantModel>): Promise <RestaurantModel|null> => {
 
             if (!id){throw new GraphQLError ("Se debe proporcionar un id")}
-            const restaurante = ctx.findOne (new ObjectId (id));
+            const restaurante = await ctx.findOne (new ObjectId (id));
 
             return restaurante;
 
@@ -29,7 +29,7 @@ export const resolvers = {
 
             if (!ciudad){throw new GraphQLError ("Se debe proporcionar una ciudad")}
 
-            const restaurantes = ctx.find ({ciudad}).toArray();
+            const restaurantes = await ctx.find ({ciudad}).toArray();
 
             return restaurantes;
 
@@ -48,7 +48,12 @@ export const resolvers = {
             /*const API_Key = Deno.env.get ("API_Key");
             const url = "https://api.api-ninjas.com/v1/validatephone?number=" + args.numeroTlfn;
 
-            const validate = await fetch ({url, headers: {'X-Api-Key': API_Key}})*/
+            const validate = await fetch ({url, headers: {'X-Api-Key': API_Key}})
+
+            const comprobarTlfn = await ctx.findOne ({numeroTlfn: args.numeroTlfn});
+            if (comprobarTlfn){
+                throw new GraphQLError ("Ya existe ese numero de telefono.");
+            }*/
 
             const response = {
 
@@ -59,6 +64,8 @@ export const resolvers = {
                 numeroTlfn: args.numeroTlfn,
 
             }
+            await ctx.insertOne (response);
+
             return response;
 
         },
@@ -67,7 +74,7 @@ export const resolvers = {
 
             if (!id) {throw new GraphQLError ("Se debe proporcionar un id")};
 
-            const restaurante = ctx.findOneAndDelete (new ObjectId (id));
+            const restaurante = await ctx.findOneAndDelete (new ObjectId (id));
             if (!restaurante){
                 return false;
             }else {return true;}
@@ -78,7 +85,7 @@ export const resolvers = {
 
     Restaurant: {
 
-        id: async (parent: RestaurantModel, _:unknown, ctx: Collection <RestaurantModel>) => {
+        id: (parent: RestaurantModel, _:unknown) => {
             return parent._id!.toString();
         },
 

@@ -3,6 +3,7 @@ import {ApolloServer} from "@apollo/server";
 import {startStandaloneServer} from "@apollo/server/standalone";
 import {schema} from "./schema.ts";
 import {resolvers} from "./resolvers.ts";
+import { RestaurantModel } from "./types.ts";
 
 const Mongo_URL = Deno.env.get ("Mongo_URL");
 
@@ -18,7 +19,7 @@ await client.connect ();
 console.log ("Database connected successfully");
 
 const db = client.db(dbName);
-//const Collection = db.collection <> ("");
+const RestaurantCollection = db.collection <RestaurantModel> ("Restaurantes");
 
 const server = new ApolloServer ({
 
@@ -27,8 +28,10 @@ const server = new ApolloServer ({
 
 });
 
-const {url} = await startStandaloneServer (server, {context: async () => ({}),
+const {url} = await startStandaloneServer (server, {context: async () => ({RestaurantCollection}),
  listen: {port: 3000}
 });
 
 console.info (`Server ready at ${url}`);
+
+//237993

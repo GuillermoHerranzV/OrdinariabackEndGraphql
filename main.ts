@@ -18,7 +18,7 @@ await client.connect ();
 console.log ("Database connected successfully");
 
 const db = client.db(dbName);
-const Collection = db.collection ("");
+//const Collection = db.collection <> ("");
 
 const server = new ApolloServer ({
 
